@@ -1,7 +1,16 @@
 # Jarviewer
-.class file decompiler
+A `.class` file decompiler.
 
-Use JDK version - openjdk 17.0.15
-Environment - Mac 
+- **JDK version**: OpenJDK 17.0.15  
+- **Environment**: macOS  
 
-To start the application -> double click run-jarviewer.command 
+### How to start the application
+
+1. Give execute permission (only once), open terminal and run:  
+   
+   chmod +x run-jarviewer.command
+
+2. Double-click `run-jarviewer.command`
+
+> 💡 On Linux, run `./run-jarviewer.command` after giving execute permission:  
+> `chmod +x run-jarviewer.command`
