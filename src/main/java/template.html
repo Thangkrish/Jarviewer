@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Code Viewer</title>
+    <style>
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            counter-reset: line;
+        }
+        pre code {
+            display: block;
+            padding-left: 4em;
+            position: relative;
+        }
+        pre code:before {
+            counter-increment: line;
+            content: counter(line);
+            display: inline-block;
+            width: 3em;
+            padding-right: 1em;
+            margin-left: -4em;
+            text-align: right;
+            color: #888;
+            user-select: none;
+        }
+        .highlight {
+            background-color: #ffff80;
+            color: #000;
+            border-radius: 2px;
+        }
+        .current-highlight {
+            background-color: #ff9632;
+            color: #000;
+            border-radius: 2px;
+        }
+
+        /* Java syntax highlighting */
+        .keyword { color: #0000ff; font-weight: bold; }
+        .string { color: #008000; }
+        .comment { color: #808080; font-style: italic; }
+        .number { color: #0000ff; }
+        .type { color: #267f99; }
+        .annotation { color: #808000; }
+    </style>
+    <script>
+        // Highlight all occurrences of text
+        function highlightText(searchText) {
+            if (!searchText || searchText.trim().length === 0) return;
+
+            clearHighlights();
+
+            const preElement = document.querySelector('pre');
+            if (!preElement) return;
+
+            const text = preElement.textContent;
+            const escapedSearchText = searchText.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const regex = new RegExp(escapedSearchText, 'gi');
+
+            const matches = [];
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+                matches.push({
+                    index: match.index,
+                    text: match[0]
+                });
+            }
+
+            if (matches.length === 0) return;
+
+            // We need to create a new tree walker and create highlights
+            const walker = document.createTreeWalker(
+                preElement,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+
+            let node;
+            let currentIndex = 0;
+
+            // For each text node
+            while (node = walker.nextNode()) {
+                const nodeLength = node.nodeValue.length;
+                const nodeEndIndex = currentIndex + nodeLength;
+
+                // Check if any match is within this text node
+                for (let i = 0; i < matches.length; i++) {
+                    const match = matches[i];
+
+                    // If match starts in this node
+                    if (match.index >= currentIndex && match.index < nodeEndIndex) {
+                        // Get the relative position within this text node
+                        const startPos = match.index - currentIndex;
+                        const endPos = Math.min(startPos + match.text.length, nodeLength);
+
+                        // Split the text node and insert highlight
+                        const beforeText = node.nodeValue.substring(0, startPos);
+                        const matchText = node.nodeValue.substring(startPos, endPos);
+                        const afterText = node.nodeValue.substring(endPos);
+
+                        const parentNode = node.parentNode;
+
+                        // Create a highlight span
+                        const highlightSpan = document.createElement('span');
+                        highlightSpan.className = 'highlight';
+                        highlightSpan.appendChild(document.createTextNode(matchText));
+
+                        // Replace the text node with our fragments
+                        if (beforeText) {
+                            parentNode.insertBefore(document.createTextNode(beforeText), node);
+                        }
+
+                        parentNode.insertBefore(highlightSpan, node);
+
+                        if (afterText) {
+                            // If there's text after the match, we replace the current node with it
+                            node.nodeValue = afterText;
+                            // Adjust current position to account for the inserted nodes
+                            currentIndex += beforeText.length + matchText.length;
+                        } else {
+                            // No text after match, remove the original node
+                            parentNode.removeChild(node);
+                            // We need a new node to continue
+                            break;
+                        }
+                    }
+                }
+
+                currentIndex = nodeEndIndex;
+            }
+
+            return matches.length;
+        }
+
+        function clearHighlights() {
+            const highlights = document.querySelectorAll('.highlight, .current-highlight');
+            highlights.forEach(el => {
+                const parent = el.parentNode;
+                const text = document.createTextNode(el.textContent);
+                parent.replaceChild(text, el);
+            });
+
+            // Normalize the document to merge adjacent text nodes
+            document.body.normalize();
+        }
+
+        function clearSelection() {
+            const currentHighlights = document.querySelectorAll('.current-highlight');
+            currentHighlights.forEach(el => {
+                el.className = 'highlight';
+            });
+        }
+
+        function selectMatch(position, searchText) {
+            const highlights = document.querySelectorAll('.highlight');
+            if (!highlights.length) return;
+
+            let currentHighlight = null;
+
+            // Find the highlight that contains this position
+            let currentPos = 0;
+            for (let i = 0; i < highlights.length; i++) {
+                const highlight = highlights[i];
+                const highlightLength = highlight.textContent.length;
+
+                if (position >= currentPos && position < currentPos + highlightLength) {
+                    highlight.className = 'current-highlight';
+                    currentHighlight = highlight;
+                    break;
+                }
+
+                currentPos += highlightLength;
+            }
+
+            // If no highlight was found exactly at position, just use the first one
+            if (!currentHighlight && highlights.length > 0) {
+                highlights[0].className = 'current-highlight';
+                currentHighlight = highlights[0];
+            }
+
+            // Scroll to the highlight
+            if (currentHighlight) {
+                currentHighlight.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
+        }
+
+        // Basic syntax highlighting for Java
+        function highlightSyntax() {
+            const codeElement = document.querySelector('pre');
+            if (!codeElement) return;
+
+            let html = codeElement.innerHTML;
+
+            // Java keywords
+            const keywords = [
+                'abstract', 'assert', 'boolean', 'break', 'byte', 'case', 'catch', 'char', 'class', 'const',
+                'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float',
+                'for', 'goto', 'if', 'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native',
+                'new', 'package', 'private', 'protected', 'public', 'return', 'short', 'static', 'strictfp',
+                'super', 'switch', 'synchronized', 'this', 'throw', 'throws', 'transient', 'try', 'void',
+                'volatile', 'while', 'true', 'false', 'null'
+            ];
+
+            // Create a code element for proper formatting
+            codeElement.innerHTML = '<code>' + html + '</code>';
+
+            // Apply syntax highlighting
+            let code = codeElement.querySelector('code').innerHTML;
+
+            // Comments
+            code = code.replace(/\/\/(.*)$/gm, '<span class="comment">//\$1</span>');
+            code = code.replace(/\/\*[\s\S]*?\*\//gm, '<span class="comment">\$&</span>');
+
+            // Strings
+            code = code.replace(/"([^"\\]|\\.)*"/g, '<span class="string">\$&</span>');
+
+            // Keywords
+            const keywordPattern = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
+            code = code.replace(keywordPattern, '<span class="keyword">\$&</span>');
+
+            // Types (capitalized words)
+            code = code.replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, '<span class="type">\$&</span>');
+
+            // Numbers
+            code = code.replace(/\b(\d+(\.\d+)?)\b/g, '<span class="number">\$&</span>');
+
+            // Annotations
+            code = code.replace(/@\w+/g, '<span class="annotation">\$&</span>');
+
+            codeElement.querySelector('code').innerHTML = code;
+        }
+
+        // Initialize when document is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            highlightSyntax();
+        });
+    </script>
+</head>
+<body>
+    <pre></pre>
+</body>
+</html>
+

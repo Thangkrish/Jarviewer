@@ -1,0 +1,9 @@
+.keyword { -fx-fill: #000080; -fx-font-weight: bold; }
+.string { -fx-fill: #008000; }
+.comment { -fx-fill: #808080; -fx-font-style: italic; }
+.annotation { -fx-fill: #808000; }
+.number { -fx-fill: #0000ff; }
+.class { -fx-fill: #267f99; }
+.search-match { -fx-fill: #000000; -fx-background-color: #ffff80; }
+.search-current { -fx-fill: #000000; -fx-background-color: #ff9632; }
+
