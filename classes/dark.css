@@ -1,0 +1,112 @@
+/* Dark theme stylesheet */
+
+.root {
+    -fx-background-color: #1e1e1e;
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-text-fill: #e8e8e8;
+}
+
+/* Menu styling */
+.menu-bar {
+    -fx-background-color: #2d2d2d;
+    -fx-text-fill: #e8e8e8;
+}
+.menu, .menu .label { -fx-text-fill: #e8e8e8; }
+.menu:showing, .menu:hover { -fx-background-color: #3d3d3d; }
+.menu-item { -fx-text-fill: #e8e8e8; }
+.menu-item:hover { -fx-background-color: #4b6eaf; }
+.context-menu { -fx-background-color: #2d2d2d; -fx-border-color: #4d4d4d; }
+
+/* TreeView */
+.tree-view { -fx-background-color: #252525; -fx-border-color: #3f3f3f; }
+.tree-cell { -fx-text-fill: #e8e8e8; }
+.tree-cell:selected { -fx-background-color: #4b6eaf; -fx-text-fill: #ffffff; }
+.tree-cell:hover:filled { -fx-background-color: #3a3a3a; }
+
+/* Class-specific colors in tree (apply to the cell itself) */
+.tree-cell.class-file { -fx-text-fill: #7aa2f7; }
+.tree-cell.java-file { -fx-text-fill: #f7ba7e; }
+.tree-cell.xml-file { -fx-text-fill: #bb9af7; }
+.tree-cell.jar-file { -fx-text-fill: #9ece6a; -fx-font-weight: bold; }
+.tree-cell.folder { -fx-text-fill: #e0af68; -fx-font-weight: bold; }
+
+/* Text area */
+.text-area {
+    -fx-font-family: 'Consolas', 'Monaco', monospace;
+    -fx-font-size: 14px;
+    -fx-background-color: #252525;
+    -fx-text-fill: #e8e8e8;
+    -fx-border-color: #3f3f3f;
+}
+.text-area .content { -fx-background-color: #252525; }
+.text-area:focused { -fx-border-color: #4b6eaf; }
+
+/* Status bar */
+.status-bar { -fx-background-color: #2d2d2d; -fx-text-fill: #e8e8e8; -fx-padding: 5; }
+.status-bar .label { -fx-text-fill: #e8e8e8; }
+
+/* Code Area */
+.code-area { -fx-font-family: 'Consolas', 'Monaco', monospace; -fx-font-size: 14px; -fx-background-color: #1e1e1e; }
+.code-area .text { -fx-fill: #e8e8e8; }
+.code-area .paragraph-box:has-caret { -fx-background-color: #2a2a2a; }
+.code-area .lineno { -fx-background-color: #252525; -fx-text-fill: #9aa0a6; -fx-font-size: 12px; -fx-padding: 0 5px; -fx-border-color: #3f3f3f; -fx-border-width: 0 1px 0 0; }
+
+/* Syntax highlighting */
+.keyword { -fx-fill: #c586c0; -fx-font-weight: bold; }
+.string { -fx-fill: #ce9178; }
+.comment { -fx-fill: #6a9955; -fx-font-style: italic; }
+.annotation { -fx-fill: #d7ba7d; }
+.number { -fx-fill: #b5cea8; }
+.tag { -fx-fill: #4fc1ff; -fx-font-weight: bold; }
+.attribute { -fx-fill: #e06c75; }
+.attribute-value { -fx-fill: #98c379; }
+
+/* Search highlights (RichTextFX uses -rtfx-background-color) */
+.search-highlight { -fx-fill: #000000; -rtfx-background-color: #fff176; }
+.search-highlight-current { -fx-fill: #000000; -rtfx-background-color: #ffb74d; -fx-underline: true; }
+
+/* Tabs */
+.tab-pane > .tab-header-area { -fx-background-color: #1e1e1e; }
+.tab-pane > .tab-header-area > .tab-header-background { -fx-background-color: #252525; }
+.tab { -fx-background-color: #252525; -fx-border-color: #3f3f3f; -fx-text-fill: #e8e8e8; }
+.tab:selected { -fx-background-color: #1e1e1e; -fx-border-color: #4b6eaf #3f3f3f transparent #3f3f3f; }
+.tab:selected .focus-indicator { -fx-border-color: transparent; }
+.tab:hover { -fx-background-color: #3a3a3a; }
+.tab .tab-label { -fx-text-fill: #e8e8e8; }
+
+/* Toolbar buttons */
+.tool-bar { -fx-background-color: #2d2d2d; -fx-spacing: 5; -fx-padding: 5; }
+.button {
+    -fx-background-color: #3d3d3d;
+    -fx-text-fill: #e8e8e8;
+    -fx-border-color: #4d4d4d;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 5 10 5 10;
+}
+.button:hover {
+    -fx-background-color: #4d4d4d;
+}
+.button:pressed {
+    -fx-background-color: #4b6eaf;
+}
+
+/* Scroll bars */
+.scroll-bar {
+    -fx-background-color: #2d2d2d;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #4d4d4d;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: #5d5d5d;
+}
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: #2d2d2d;
+}
+
+/* About dialog enhancements (Dark) */
+.about-dialog { -fx-background-color: #252525; -fx-padding: 15; }
+.about-title { -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #e8e8e8; }
+.info-label { -fx-text-fill: #b8b8b8; -fx-font-weight: bold; }
